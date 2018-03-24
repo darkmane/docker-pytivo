@@ -14,19 +14,18 @@ RUN usermod -u 99 nobody
 RUN usermod -g 100 nobody
 
 #RUN add-apt-repository ppa:jon-severinsson/ffmpeg
-RUN apt-get -q update; apt-get install -qy build-essential git subversion wget python; 
+RUN apt-get -q update; apt-get install -qy build-essential git subversion curl python; 
 
 # Install ffmpeg to /usr/bin/ (pyTivo will be able to find this automatically)
 
-RUN wget -O http://mirror.ffmpeginstaller.com/old/scripts/ffmpeg8/ffmpeginstaller.9.0.tar.gz; tar -xzvf ffmpeginstaller.9.0.tar.gz
+RUN curl -O http://mirror.ffmpeginstaller.com/old/scripts/ffmpeg8/ffmpeginstaller.9.0.tar.gz | tar -xzv 
 RUN cd ffmpeginstaller.9.0 && sh start.sh
 
 # Compile tivodecode and tdcat, install to /usr/local/bin/ (pyTivo will be able to find this automatically)
 
-RUN wget http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz \
-    tar xvfz tivodecode-0.2pre4.tar.gz -C /opt/ ; \
+RUN curl http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz | tar xvz  -C /opt/ ; \
     cd /opt/tivodecode-0.2pre4;./configure ; \
-    make ;make install
+    make ; make install
 
 # Install pyTivo
 # wget the 2014-07-06 release
