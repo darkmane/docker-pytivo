@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:stretch
+    steps:
+      - checkout
+      - run:
+          name: Prepare QEMU
+          command: docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - run:
+          name: Build darkmane/pytivo-rpi
+          command: docker build -t darkmane/pytivo-rpi -f Dockerfile-rpi .
+      - run:
+          name: Test image
+          command: echo No tests for this image
+      - run:
+          name: Tag docker image
+          command: docker tag darkmane/pytivo-rpi darkmane/pytivo-rpi:$CIRCLE_SHA1
+      - run:
+          name: Push image
+          command: docker push  darkmane/pytivo-rpi:$CIRCLE_SHA1
