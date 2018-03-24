@@ -14,7 +14,19 @@ RUN usermod -u 99 nobody
 RUN usermod -g 100 nobody
 
 #RUN add-apt-repository ppa:jon-severinsson/ffmpeg
-RUN apt-get -q update
+RUN apt-get -q update; apt-get install -qy build-essential git subversion; 
+
+# Install ffmpeg to /usr/bin/ (pyTivo will be able to find this automatically)
+
+RUN wget -O http://mirror.ffmpeginstaller.com/old/scripts/ffmpeg8/ffmpeginstaller.9.0.tar.gz; tar -xzvf ffmpeginstaller.9.0.tar.gz
+RUN cd ffmpeginstaller.9.0 && sh start.sh
+
+# Compile tivodecode and tdcat, install to /usr/local/bin/ (pyTivo will be able to find this automatically)
+
+RUN wget http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz \
+    tar xvfz tivodecode-0.2pre4.tar.gz -C /opt/ ; \
+    cd /opt/tivodecode-0.2pre4;./configure ; \
+    make ;make install
 
 # Install pyTivo
 RUN apt-get install -qy wget python
@@ -23,20 +35,6 @@ RUN apt-get install -qy wget python
 RUN wget -O pytivo.tar.gz http://repo.or.cz/w/pyTivo/wmcbrine/lucasnz.git/snapshot/bbddd6221fecbfc9172f8c78f64bfe69d02cee8a.tar.gz
 RUN mkdir -p /opt/pytivo/lucasnz
 RUN tar -xvf pytivo.tar.gz -C /opt/pytivo/lucasnz --strip-components=1
-
-# Install ffmpeg to /usr/bin/ (pyTivo will be able to find this automatically)
-RUN apt-get -q update; \
-    apt-get install -qy build-essential; \
-    apt-get build-dep -qy ffmpeg; \
-    apt-get source -qy ffmpeg; ls -Al ;\
-    cd ffmpeg; dpkg-buildpackage -us -uc 
-
-# Compile tivodecode and tdcat, install to /usr/local/bin/ (pyTivo will be able to find this automatically)
-
-RUN wget http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz \
-    tar xvfz tivodecode-0.2pre4.tar.gz -C /opt/ ; \
-    cd /opt/tivodecode-0.2pre4;./configure ; \
-    make ;make install
 
 VOLUME /config
 VOLUME /media
