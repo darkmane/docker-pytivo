@@ -14,7 +14,7 @@ RUN usermod -u 99 nobody
 RUN usermod -g 100 nobody
 
 #RUN add-apt-repository ppa:jon-severinsson/ffmpeg
-RUN apt-get -q update; apt-get install -qy build-essential git subversion curl python; 
+RUN apt-get -q update; apt-get install -qy build-essential git subversion wget python; 
 
 # Install libavtools to /usr/bin/ (pyTivo will be able to find this automatically)
 
@@ -22,7 +22,8 @@ RUN apt-get install libav-tools
 
 # Compile tivodecode and tdcat, install to /usr/local/bin/ (pyTivo will be able to find this automatically)
 
-RUN curl http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz | tar xvz  -C /opt/ ; \
+RUN wget http://sourceforge.net/projects/tivodecode/files/tivodecode/0.2pre4/tivodecode-0.2pre4.tar.gz; \
+     | tar xvzf tivodecode-0.2pre4.tar.gz  -C /opt/ ; \
     cd /opt/tivodecode-0.2pre4;./configure ; \
     make ; make install
 
