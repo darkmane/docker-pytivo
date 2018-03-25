@@ -21,4 +21,6 @@ jobs:
           command: docker tag darkmane/pytivo-rpi darkmane/pytivo-rpi:$CIRCLE_SHA1
       - run:
           name: Push image
-          command: docker push  darkmane/pytivo-rpi:$CIRCLE_SHA1
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push  darkmane/pytivo-rpi:$CIRCLE_SHA1
