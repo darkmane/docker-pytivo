@@ -16,10 +16,9 @@ RUN usermod -g 100 nobody
 #RUN add-apt-repository ppa:jon-severinsson/ffmpeg
 RUN apt-get -q update; apt-get install -qy build-essential git subversion curl python; 
 
-# Install ffmpeg to /usr/bin/ (pyTivo will be able to find this automatically)
+# Install libavtools to /usr/bin/ (pyTivo will be able to find this automatically)
 
-RUN curl -O http://mirror.ffmpeginstaller.com/old/scripts/ffmpeg8/ffmpeginstaller.9.0.tar.gz | tar -xzv 
-RUN cd ffmpeginstaller.9.0 && sh start.sh
+RUN apt-get install libav-tools
 
 # Compile tivodecode and tdcat, install to /usr/local/bin/ (pyTivo will be able to find this automatically)
 
